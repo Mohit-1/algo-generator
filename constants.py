@@ -1,0 +1,18 @@
+LANGUAGE = 'en'
+
+FOR = 'for'
+WHILE = 'while'
+IF = 'if'
+ELSE = 'else'
+ELIF = 'elif'
+RANGE = 'range'
+IMPORT = 'import'
+FROM = 'from'
+WITH = 'with'
+PRINT = 'print'
+BREAK = 'break'
+CONTINUE = 'continue'
+ARITHEMATIC_OPERATORS = ['+', '-', '*', '/', '%', '**']
+DEF = 'def'
+SPACE = ' '
+TAB = '\t'
