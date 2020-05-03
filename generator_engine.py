@@ -1,8 +1,12 @@
 from constants import (FOR, WHILE, IF, ELSE, ELIF, RANGE, IMPORT, FROM, WITH, PRINT, BREAK,
-                       CONTINUE, ARITHEMATIC_OPERATORS, DEF)
+                       CONTINUE, ARITHEMATIC_OPERATORS, DEF, CLASS)
 
 
 class AlgoGenerator:
+    """
+    The Algorithm generator that handles the logic to convert a piece of code into
+    it's corresponding algorithm
+    """
     def get_value_between_brackets(self, line):
         i, j = 0, len(line) - 1
         bracket_start, bracket_end = i, j
@@ -26,7 +30,7 @@ class AlgoGenerator:
 
     def handle_loop(self, loop_type, line):
         line = line.lstrip()
-        message, start = None, 0
+        start = 0
         if loop_type == FOR:
             if RANGE in line:
                 iterator = line.split()[1]
@@ -38,48 +42,62 @@ class AlgoGenerator:
                     iterations = value
 
                 return "Start a for-loop {} times with iterator '{}' starting from {}".format(iterations, iterator, start)
-            else:
-                return "Start a for-loop on the iterable '{}' with iterator(s) '{}'".format(line.split("in")[1][:-1].strip(), line.split("in")[0].replace("for", "").strip())
-        elif loop_type == WHILE:
+
+            return "Start a for-loop on the iterable '{}' with iterator(s) '{}'".format(line.split("in")[1][:-1].strip(), line.split("in")[0].replace("for", "").strip())
+
+        if loop_type == WHILE:
             condition = line[5:-1]
             return "Run a while-loop with condition {}".format(condition)
 
 
     def handle_assignment(self, line):
-        if "==" not in line and "=" in line:
-            if line[line.index("=") - 1] in ARITHEMATIC_OPERATORS:
-                operator = line[line.index("=") - 1]
-                operand = line[:line.index("=") - 1].strip()
-                if operator == '+':
-                    operation = "Increment"
-                elif operator == '-':
-                    operation = "Decrement"
-                elif operator == '/':
-                    operation = "Divide"
-                elif operator == '*' and line[line.index("=") - 2] == '*':
-                    operation = "Raise"
-                    operand = line[:line.index("=") - 2].strip()
-                elif operator == '*':
-                    operation = "Multiply"
-                elif operator == '%':
-                    operation = "Modulo"
+        if line[line.index("=") - 1] in ARITHEMATIC_OPERATORS:
+            operator = line[line.index("=") - 1]
+            operand = line[:line.index("=") - 1].strip()
+            if operator == '+':
+                operation = "Increment"
+            elif operator == '-':
+                operation = "Decrement"
+            elif operator == '/':
+                operation = "Divide"
+            elif operator == '*' and line[line.index("=") - 2] == '*':
+                operation = "Raise"
+                operand = line[:line.index("=") - 2].strip()
+            elif operator == '*':
+                operation = "Multiply"
+            elif operator == '%':
+                operation = "Modulo"
 
-                return "{} the value of '{}' by {}".format(operation, operand, line.split("=")[1].strip())
-            return "Set the value of '{}' to '{}'".format(line.split('=')[0].strip(), line.split('=')[1].strip())
+            return "{} the value of '{}' by {}".format(operation, operand, line.split("=")[1].strip())
+        return "Set the value of '{}' to '{}'".format(line.split('=')[0].strip(), line.split('=')[1].strip())
 
 
     def get_the_value_to_print(self, line):
         value = self.get_value_between_brackets(line)
         if value[0] == "'" or value[0] == '"':
             return "Print {}".format(value)
-        else:
-            return "Print the value of '{}'".format(value)
+
+        return "Print the value of '{}'".format(value)
 
 
     def handle_function_definition(self, line):
         function_name = line.lstrip().split("(")[0][4:]
         params = self.get_value_between_brackets(line)
+
         return "Define a function '{}' with parameter(s) '{}'".format(function_name, params)
+
+
+    def handle_class_declaration(self, line):
+        line = line.lstrip()
+        if '(' in line:
+            class_name = line.split("(")[0][6:]
+            base_class_names = self.get_value_between_brackets(line)
+
+            return "Define a class '{}' that inherits from '{}'".format(class_name, base_class_names)
+
+        class_name = line[6:-1]
+
+        return "Define a class '{}'".format(class_name)
 
 
     def get_keyword(self, line):
@@ -110,5 +128,7 @@ class AlgoGenerator:
             keyword = BREAK
         elif line[:3] == DEF and line[3] == " ":
             keyword = DEF
+        elif line[:5] == CLASS and line[5] == " ":
+            keyword = CLASS
 
         return keyword

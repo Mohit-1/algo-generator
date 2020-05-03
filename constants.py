@@ -14,5 +14,6 @@ BREAK = 'break'
 CONTINUE = 'continue'
 ARITHEMATIC_OPERATORS = ['+', '-', '*', '/', '%', '**']
 DEF = 'def'
+CLASS = 'class'
 SPACE = ' '
 TAB = '\t'

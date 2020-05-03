@@ -3,7 +3,8 @@ import traceback
 import sys
 from gtts import gTTS
 from generator_engine import AlgoGenerator
-from constants import LANGUAGE, FOR, WHILE, IF, ELSE, ELIF, IMPORT, FROM, PRINT, BREAK, CONTINUE, DEF, SPACE, TAB
+from constants import (LANGUAGE, FOR, WHILE, IF, ELSE, ELIF, IMPORT, FROM, PRINT, BREAK, CONTINUE, 
+                       DEF, SPACE, TAB, CLASS)
 from configurations import SET_LINE_NUMBER, EXPORT_TO_FILE, GENERATE_AUDIO
 
 source_filename = sys.argv[1]
@@ -19,8 +20,7 @@ with open(source_filename) as f:
         line = line.rstrip()
         if not line:
             algorithm += "\n"  # If we find a blank line, we keep the blank line
-
-        if line:
+        else:
             try:
                 indentation_type = SPACE if line[0] == SPACE else TAB
                 indentation_value = len(line) - len(line.lstrip())
@@ -40,6 +40,8 @@ with open(source_filename) as f:
                     algorithm += line.strip().capitalize()
                 elif keyword == DEF:
                     algorithm += generator.handle_function_definition(line)
+                elif keyword == CLASS:
+                    algorithm += generator.handle_class_declaration(line)
                 elif "==" not in line and "=" in line:
                     algorithm += generator.handle_assignment(line)
                 else:
